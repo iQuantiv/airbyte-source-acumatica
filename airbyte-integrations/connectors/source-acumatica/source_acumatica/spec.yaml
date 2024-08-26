@@ -1,0 +1,30 @@
+documentationUrl: https://docsurl.com
+connectionSpecification:
+  $schema: http://json-schema.org/draft-07/schema#
+  title: Acumatica Spec
+  type: object
+  required:
+    - BASEURL
+    - CLIENTID
+    - CLIENTSECRET
+    - USERNAME
+    - PASSWORD
+  properties:
+    # 'TODO: This schema defines the configuration required for the source. This usually involves metadata such as database and/or authentication information.':
+    BASEURL:
+      type: string
+      description: base URL for Acumatica instance
+    CLIENTID:
+      type: string
+      description: id used to distinguish client environment in Acumatica
+    CLIENTSECRET:
+      type: string
+      description: unique key for user/environment in Acumatica
+      airbyte_secret: true
+    USERNAME:
+      type: string
+      description: username used to login to Acumatica
+    PASSWORD:
+      type: string
+      description: user password to login to acumatica
+      airbyte_secret: true

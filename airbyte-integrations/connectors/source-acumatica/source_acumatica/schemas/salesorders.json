@@ -1,0 +1,381 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "rowNumber": {
+          "type": "integer"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "Approved": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "BaseCurrencyID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "BillToAddressOverride": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "BillToAddressValidated": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "BillToContactOverride": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "Branch": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "CashAccount": {
+          "type": "object"
+        },
+        "ContactID": {
+          "type": "object"
+        },
+        "ControlTotal": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            }
+          },
+          "required": ["value"]
+        },
+        "CreatedDate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["value"]
+        },
+        "CreditHold": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "CurrencyID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "CurrencyRate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            }
+          },
+          "required": ["value"]
+        },
+        "CurrencyRateTypeID": {
+          "type": "object"
+        },
+        "CustomerID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "CustomerOrder": {
+          "type": "object"
+        },
+        "Date": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["value"]
+        },
+        "Description": {
+          "type": "object"
+        },
+        "DestinationWarehouseID": {
+          "type": "object"
+        },
+        "DisableAutomaticDiscountUpdate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "DisableAutomaticTaxCalculation": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "EffectiveDate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["value"]
+        },
+        "ExternalRef": {
+          "type": "object"
+        },
+        "Hold": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "IsTaxValid": {
+          "type": "object"
+        },
+        "LastModified": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["value"]
+        },
+        "LocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "NoteID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": ["value"]
+        },
+        "OrderedQty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            }
+          },
+          "required": ["value"]
+        },
+        "OrderNbr": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "OrderTotal": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            }
+          },
+          "required": ["value"]
+        },
+        "OrderType": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "PaymentMethod": {
+          "type": "object"
+        },
+        "PaymentRef": {
+          "type": "object"
+        },
+        "PreferredWarehouseID": {
+          "type": "object"
+        },
+        "Project": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "ReciprocalRate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            }
+          },
+          "required": ["value"]
+        },
+        "RequestedOn": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["value"]
+        },
+        "ShipToAddressOverride": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "ShipToAddressValidated": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "ShipToContactOverride": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "ShipVia": {
+          "type": "object"
+        },
+        "Status": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": ["value"]
+        },
+        "TaxTotal": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            }
+          },
+          "required": ["value"]
+        },
+        "WillCall": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            }
+          },
+          "required": ["value"]
+        },
+        "custom": {
+          "type": "object"
+        },
+        "_links": {
+          "type": "object",
+          "properties": {
+            "self": {
+              "type": "string"
+            },
+            "files:put": {
+              "type": "string"
+            }
+          },
+          "required": ["self", "files:put"]
+        }
+      },
+      "required": ["id", "rowNumber", "note", "Approved", "BaseCurrencyID", "BillToAddressOverride", "BillToAddressValidated", "BillToContactOverride", "Branch", "ControlTotal", "CreatedDate", "CreditHold", "CurrencyID", "CurrencyRate", "CustomerID", "Date", "DisableAutomaticDiscountUpdate", "DisableAutomaticTaxCalculation", "EffectiveDate", "Hold", "LastModified", "LocationID", "NoteID", "OrderedQty", "OrderNbr", "OrderTotal", "OrderType", "Project", "ReciprocalRate", "RequestedOn", "ShipToAddressOverride", "ShipToAddressValidated", "ShipToContactOverride", "Status", "TaxTotal", "WillCall", "_links"]
+    }
+  }
+  
