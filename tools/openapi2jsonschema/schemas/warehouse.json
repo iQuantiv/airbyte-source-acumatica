@@ -1,0 +1,615 @@
+{
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "rowNumber": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "custom": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "required": [
+                "type"
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              },
+              "discriminator": "type"
+            }
+          }
+        },
+        "error": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "filename": {
+                "type": "string"
+              },
+              "href": {
+                "format": "uri",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "Active": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "COGSExpenseAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "COGSExpenseSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Description": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "DiscountAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "DiscountSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "DropShipLocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "FreightChargeAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "FreightChargeSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "InventoryAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "InventorySubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LandedCostVarianceAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LandedCostVarianceSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LastModifiedDateTime": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Locations": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "rowNumber": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "note": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "custom": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "discriminator": "type"
+                      }
+                    }
+                  },
+                  "error": {
+                    "type": "string"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "format": "uri",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "Active": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "AssemblyAllowed": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Description": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "LocationID": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "PickPriority": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "int32",
+                        "type": "integer"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ReceiptsAllowed": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "SalesAllowed": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "TransfersAllowed": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "MiscChargeAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "MiscChargeSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "NonStockPickingLocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "OverrideInventoryAccountSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "POAccrualAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "POAccrualSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "PurchasePriceVarianceAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "PurchasePriceVarianceSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ReasonCodeSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ReceivingLocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "RMALocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "SalesAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "SalesSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShippingLocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "StandardCostRevaluationAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "StandardCostRevaluationSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "StandardCostVarianceAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "StandardCostVarianceSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "UseItemDefaultLocationForPicking": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "WarehouseID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object"
+}

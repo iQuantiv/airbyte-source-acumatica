@@ -1,0 +1,730 @@
+{
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "rowNumber": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "custom": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "required": [
+                "type"
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              },
+              "discriminator": "type"
+            }
+          }
+        },
+        "error": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "filename": {
+                "type": "string"
+              },
+              "href": {
+                "format": "uri",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "Account": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Amount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "AppointmentAmount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "AppointmentCount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "AppointmentDuration": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "AppointmentEstimatedDuration": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "AppointmentQty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Billable": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "BillingRule": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Branch": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ComponentID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ComponentLineRef": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CostCode": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CoveredQty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Description": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "DiscountAmount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "DiscountPercent": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "EquipmentAction": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "EquipmentActionComment": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "EstimatedAmount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "EstimatedDuration": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "EstimatedQty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ExtPrice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "InventoryID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LastReference": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LineNbr": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LineRef": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LineStatus": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LineType": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Location": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LotSerialNbr": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ManualPrice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "MarkforPO": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ModelEquipmentLineRef": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "OverageQty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "OverageUnitPrice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "POCompleted": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "PONbr": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "POStatus": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "PrepaidItem": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ProjectTask": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Qty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ServiceContractItem": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ServiceOrderNbr": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ServiceOrderType": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "SortOrder": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "StaffMemberID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Subaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Subitem": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "TargetEquipmentID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "TaxCategory": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "UnitCost": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "UnitPrice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "UOM": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "VendorID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "VendorLocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Warehouse": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Warranty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object"
+}

@@ -1,0 +1,306 @@
+{
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "rowNumber": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "custom": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "required": [
+                "type"
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              },
+              "discriminator": "type"
+            }
+          }
+        },
+        "error": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "filename": {
+                "type": "string"
+              },
+              "href": {
+                "format": "uri",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "ActualAmount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Amount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "AmountToInvoice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Branch": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CostCode": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CurrentInvoiced": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "DeferralCode": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Description": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "DraftInvoicesAmount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "InventoryID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "PreviouslyInvoiced": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ProjectTaskID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Retainage": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "RetainageAmount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "RevisedBudgetedAmount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "SalesAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "SalesSubaccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "StoredMaterial": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "TaxCategory": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "TotalCompleted": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object"
+}

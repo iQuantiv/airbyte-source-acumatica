@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "filename": {
+      "type": "string"
+    },
+    "href": {
+      "format": "uri",
+      "type": "string"
+    }
+  },
+  "$schema": "http://json-schema.org/schema#"
+}

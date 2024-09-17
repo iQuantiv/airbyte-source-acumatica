@@ -1,0 +1,916 @@
+{
+  "required": [
+    "entity"
+  ],
+  "type": "object",
+  "properties": {
+    "entity": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "rowNumber": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "note": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "custom": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                  "required": [
+                    "type"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "discriminator": "type"
+                }
+              }
+            },
+            "error": {
+              "type": "string"
+            },
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "format": "uri",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "ApplyOverdueCharges": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ARAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ARSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "Attributes": {
+              "type": "array",
+              "items": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "rowNumber": {
+                        "format": "int64",
+                        "type": "integer"
+                      },
+                      "note": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "custom": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "discriminator": "type"
+                          }
+                        }
+                      },
+                      "error": {
+                        "type": "string"
+                      },
+                      "files": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "filename": {
+                              "type": "string"
+                            },
+                            "href": {
+                              "format": "uri",
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "Active": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "boolean"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "AttributeID": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "DefaultValue": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "Description": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "Required": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "boolean"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "SortOrder": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "AutoApplyPayments": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CashDiscountAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CashDiscountSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ClassID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "COGSAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "COGSSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "Country": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CreatedDateTime": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CreditDaysPastDue": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "int32",
+                  "type": "integer"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CreditLimit": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CreditVerification": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CurrencyID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CurrencyRateType": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "DefaultLocationIDfromBranch": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "DefaultRestrictionGroup": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "Description": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "DiscountAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "DiscountSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "EnableCurrencyOverride": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "EnableRateOverride": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "EnableWriteOffs": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "EntityUsageType": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "FreightAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "FreightSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "GroupDocumentDiscountLimit": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "LastModifiedDateTime": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "MiscAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "MiscSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "MultiCurrencyStatements": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "OverdueChargeID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "OverLimitAmount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "PaymentMethod": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "PrepaymentAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "PrepaymentSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "PrintDunningLetters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "PrintInvoices": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "PrintStatements": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "RequireEntityUsageType": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "RequireTaxZone": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "SalesAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "SalespersonID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "SalesSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "SendDunningLettersbyEmail": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "SendInvoicesbyEmail": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "SendStatementsByEmail": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "boolean"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ShippingRule": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ShippingTerms": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ShipVia": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "StatementCycleID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "StatementType": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "TaxZoneID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "Terms": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "UnrealizedGainAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "UnrealizedGainSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "UnrealizedLossAccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "UnrealizedLossSubaccount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "WriteOffLimit": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "parameters": {
+      "description": "The parameters of the action.",
+      "type": "object",
+      "properties": {
+        "custom": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "required": [
+                "type"
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              },
+              "discriminator": "type"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/schema#"
+}

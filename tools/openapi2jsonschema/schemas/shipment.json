@@ -1,0 +1,2055 @@
+{
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "rowNumber": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "custom": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "required": [
+                "type"
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              },
+              "discriminator": "type"
+            }
+          }
+        },
+        "error": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "filename": {
+                "type": "string"
+              },
+              "href": {
+                "format": "uri",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "BaseCurrencyID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ControlQty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CreatedDateTime": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CurrencyRate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CurrencyRateTypeID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CurrencyViewState": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CustomerID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "CreateNewShipmentForEveryOrder": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Details": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "rowNumber": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "note": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "custom": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "discriminator": "type"
+                      }
+                    }
+                  },
+                  "error": {
+                    "type": "string"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "format": "uri",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "Allocations": {
+                    "type": "array",
+                    "items": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "rowNumber": {
+                              "format": "int64",
+                              "type": "integer"
+                            },
+                            "note": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "custom": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "required": [
+                                    "type"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "discriminator": "type"
+                                }
+                              }
+                            },
+                            "error": {
+                              "type": "string"
+                            },
+                            "files": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "format": "uuid",
+                                    "type": "string"
+                                  },
+                                  "filename": {
+                                    "type": "string"
+                                  },
+                                  "href": {
+                                    "format": "uri",
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "Description": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "ExpirationDate": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "format": "date-time",
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "InventoryID": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "LocationID": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "LotSerialNbr": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "OrderNbr": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "OrderType": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Qty": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "format": "double",
+                                  "type": "number"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Subitem": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "SplitLineNbr": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "format": "int32",
+                                  "type": "integer"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "UOM": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "Description": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ExpirationDate": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "FreeItem": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "InventoryID": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "LineNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "int32",
+                        "type": "integer"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "LocationID": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "LotSerialNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OpenQty": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OrderedQty": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OrderLineNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "int32",
+                        "type": "integer"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OrderNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OrderType": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OriginalQty": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ReasonCode": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ShippedQty": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Subitem": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "UOM": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "WarehouseID": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "Description": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "EffectiveDate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "FOBPoint": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "OverrideFreightPrice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "FreightPrice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "FreightCost": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "FreightCurrencyID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "GroundCollect": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Hold": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Insurance": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LastModifiedDateTime": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "LocationID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Operation": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Orders": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "rowNumber": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "note": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "custom": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "discriminator": "type"
+                      }
+                    }
+                  },
+                  "error": {
+                    "type": "string"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "format": "uri",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "InventoryDocType": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "InventoryRefNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "InvoiceNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "InvoiceType": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OrderNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OrderType": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ShipmentNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ShipmentType": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ShippedQty": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ShippedVolume": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "ShippedWeight": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "OrderNoteID": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "Owner": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "PackageCount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Packages": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "rowNumber": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "note": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "custom": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "discriminator": "type"
+                      }
+                    }
+                  },
+                  "error": {
+                    "type": "string"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "href": {
+                          "format": "uri",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "BoxID": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "CODAmount": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Confirmed": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "CustomRefNbr1": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "CustomRefNbr2": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "DeclaredValue": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Description": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "TrackingNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Type": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "UOM": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Weight": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Length": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Width": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "Height": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "PackageContents": {
+                    "type": "array",
+                    "items": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "rowNumber": {
+                              "format": "int64",
+                              "type": "integer"
+                            },
+                            "note": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "custom": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "required": [
+                                    "type"
+                                  ],
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "discriminator": "type"
+                                }
+                              }
+                            },
+                            "error": {
+                              "type": "string"
+                            },
+                            "files": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "format": "uuid",
+                                    "type": "string"
+                                  },
+                                  "filename": {
+                                    "type": "string"
+                                  },
+                                  "href": {
+                                    "format": "uri",
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "InventoryID": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "LotSerialNbr": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "OrigOrderNbr": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "OrigOrderType": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Quantity": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "format": "double",
+                                  "type": "number"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "ShipmentSplitLineNbr": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "format": "int32",
+                                  "type": "integer"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Subitem": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "UOM": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "error": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "LineNbr": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "int32",
+                        "type": "integer"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "NoteID": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "PackageWeight": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Picked": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ReciprocalRate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ResidentialDelivery": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "SaturdayDelivery": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShipmentDate": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShipmentNbr": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShippedQty": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShippedVolume": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShippedWeight": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "double",
+              "type": "number"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShippingSettings": {
+          "allOf": [
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "rowNumber": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "note": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "custom": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "required": [
+                        "type"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "discriminator": "type"
+                    }
+                  }
+                },
+                "error": {
+                  "type": "string"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "filename": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "format": "uri",
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "ShipToAddress": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "rowNumber": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "note": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "custom": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "required": [
+                                "type"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              },
+                              "discriminator": "type"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "string"
+                        },
+                        "files": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "filename": {
+                                "type": "string"
+                              },
+                              "href": {
+                                "format": "uri",
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "AddressLine1": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "AddressLine2": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "City": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Country": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "PostalCode": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "State": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Validated": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "boolean"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "ShipToAddressOverride": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "ShipToContact": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "rowNumber": {
+                          "format": "int64",
+                          "type": "integer"
+                        },
+                        "note": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "custom": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "required": [
+                                "type"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              },
+                              "discriminator": "type"
+                            }
+                          }
+                        },
+                        "error": {
+                          "type": "string"
+                        },
+                        "files": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "filename": {
+                                "type": "string"
+                              },
+                              "href": {
+                                "format": "uri",
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Attention": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "BusinessName": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Email": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Phone1": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "error": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "ShipToContactOverride": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "Validated": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "ShippingTerms": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShippingZoneID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ShipVia": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Status": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "ToWarehouseID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "Type": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "UseCustomersAccount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "WarehouseID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "WorkgroupID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        "NoteID": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object"
+}

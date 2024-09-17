@@ -4,12 +4,23 @@
 
 
 from abc import ABC
+import collections
+import copy
+import datetime
 from typing import Any, Iterable, List, Mapping, MutableMapping, Optional, Tuple
+from urllib.parse import urljoin
+from dateutil.parser import parse
+import requests
+import json
+import yaml
+
 
 import requests
 from airbyte_cdk.sources import AbstractSource
 from airbyte_cdk.sources.streams import Stream
-from airbyte_cdk.sources.streams.http import HttpStream
+from airbyte_cdk.models import SyncMode
+from airbyte_cdk.sources.streams.core import StreamData
+from airbyte_cdk.sources.streams.http import HttpStream,HttpClient
 from airbyte_cdk.sources.streams.http.requests_native_auth import TokenAuthenticator
 
 import logging
@@ -31,11 +42,19 @@ There are additional required TODOs in the files within the integration_tests fo
 
 
 # Basic full refresh stream
-class AcumaticaStream(HttpStream, ABC):
+class AcumaticaStream(Stream, ABC):
 
     def __init__(self,config: Mapping[str, Any],authenticator = None, api_budget = None):
-        super().__init__(authenticator=authenticator,api_budget=api_budget)
+        super().__init__()
         self.config=config
+        self._exit_on_rate_limit: bool = False
+        self._http_client = HttpClient(
+            name=self.name,
+            logger=self.logger,
+            authenticator=authenticator
+        )
+
+    
 
     # TODO: Fill in the url base. Required.
     @property
@@ -72,22 +91,81 @@ class AcumaticaStream(HttpStream, ABC):
         self, stream_state: Mapping[str, Any], stream_slice: Mapping[str, any] = None, next_page_token: Mapping[str, Any] = None
     ) -> MutableMapping[str, Any]:
         if(stream_state):
-            query=f"$filter={self.cursor_field} gte '{stream_state.get(self.cursor_field)}'"
+            query=f"{self.cursor_field} gt datetimeoffset'{stream_state.get(self.cursor_field)}'"
             #logger.info(f"Request Params - Query: {query}")
         #logger.info(f"{inspect.stack()}")
-            return {"query":query}
+            return {"$filter":query}
         return {}
+    def request_headers(
+        self, stream_state: Mapping[str, Any], stream_slice: Mapping[str, any] = None, next_page_token: Mapping[str, Any] = None
+        ) -> Mapping[str, Any]:
+        return {"Accept":"application/json",
+                "Content-Type":"application/json",
+                'Cache-Control': 'no-cache',
+                'Connection': 'Close'}
+    # def request_kwargs(
+    #     self, stream_state: Mapping[str, Any], stream_slice: Mapping[str, any] = None, next_page_token: Mapping[str, Any] = None
+    #     ) -> Mapping[str, Any]:
+    #     return {"cookies":{}}
+    def flatten_json(self,nested_json, parent_key='', separator='_'):
+        items = []
+        for key, value in nested_json.items():
+            new_key = f"{parent_key}{separator}{key}" if parent_key else key
+            
+            if isinstance(value, collections.abc.MutableMapping):
+                if 'value' in value:
+                    items.append((new_key, value['value']))
+                else:
+                    items.extend(self.flatten_json(value, new_key, separator=separator).items())
+            else:
+                items.append((new_key, value))
+        
+        return dict(items)
 
-    def parse_response(self, response: requests.Response, **kwargs) -> Iterable[Mapping]:
-        """
-        TODO: Override this method to define how a response is parsed.
-        :return an iterable containing each record in the response
-        """   
-        # return [response.json()]
-        if len(response.content)> 0:
-            values=response.json()
-            return values
-        return []
+    def flatten_json_array(self,json_array):
+        return [self.flatten_json(item) for item in json_array]
+
+    def read_records(
+        self,
+        sync_mode: SyncMode,
+        cursor_field: Optional[List[str]] = None,
+        stream_slice: Optional[Mapping[str, Any]] = None,
+        stream_state: Optional[Mapping[str, Any]] = None,
+    )-> Iterable[StreamData]:
+        urlpath=urljoin(
+                self.url_base,
+                self.path(stream_state=stream_state, stream_slice=stream_slice),
+            )
+        
+        try:
+            request,response = self._http_client.send_request(http_method="GET"
+                                                            ,url=urlpath
+                                                            ,request_kwargs={}
+                                                            ,headers=self.request_headers(stream_state=stream_state,stream_slice=stream_slice)
+                                                            ,params=self.request_params(stream_state=stream_state,stream_slice=stream_slice))
+            flattenedjsonvals=[]
+            if(response.status_code==200 and len(response.content)>0):
+                flattenedjsonvals=self.flatten_json_array(response.json())
+            yield from flattenedjsonvals
+        except Exception as ex:
+            logger.error(ex)
+        else:
+            logouturl=urljoin(self.url_base,'/entity/auth/logout')
+            self._http_client.send_request(http_method="POST",url=logouturl,request_kwargs={},headers=self.request_headers(stream_state=stream_state,stream_slice=stream_slice),data={})
+            logger.info("Logged Out")
+    
+
+    
+    # def parse_response_content(self, responsecontent: requests.Response, **kwargs) -> Iterable[Mapping]:
+    #     """
+    #     TODO: Override this method to define how a response is parsed.
+    #     :return an iterable containing each record in the response
+    #     """   
+    #     # return [response.json()]
+    #     if len(response.content)> 0:
+    #         values=response.json()
+    #         return values
+    #     return []
 
 class Customers(AcumaticaStream):
     """
@@ -117,7 +195,7 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
     state_checkpoint_interval = 10
 
     @property
-    # def cursor_field(self) -> str:
+    def cursor_field(self) -> str:
     #     """
     #     TODO
     #     Override to return the cursor field used by this stream e.g: an API entity might always use created_at as the cursor field. This is
@@ -125,16 +203,19 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
 
     #     :return str: The name of the cursor field.
     #     """
-    #     return []
+        return "LastModified"
 
     def get_updated_state(self, current_stream_state: MutableMapping[str, Any], latest_record: Mapping[str, Any]) -> Mapping[str, Any]:
-        """
-        Override to determine the latest state after reading the latest record. This typically compared the cursor_field from the latest record and
-        the current state and picks the 'most' recent cursor. This is how a stream's state is determined. Required for incremental.
-        """
-        return {}
-    # TODO: Implement Get Updated State
-    # TODO: Flatten returned data
+        #If the pull dies midway and the records are not in order by last modified than this may make it so we lose records on restart.
+        current_cursor_value=parse(current_stream_state[self.cursor_field] or datetime.min)
+        latest_cursor_value=parse(latest_record[self.cursor_field] or datetime.min)
+        #TODO: Handle other cursor values than dates
+        if(latest_cursor_value>current_cursor_value):
+            new_stream_state=dict(current_stream_state)
+            new_stream_state[self.cursor_field]=latest_cursor_value
+            return new_stream_state
+        else:
+            return current_stream_state
     # TODO: Implement dynamic discovery
     # TODO: Test run incremental pull
     # TODO: Logging
@@ -224,10 +305,72 @@ class SourceAcumatica(AbstractSource):
 
         :param config: A Mapping of the user input configuration as defined in the connector spec.
         """
-        # TODO remove the authenticator if not required.
-        auth = TokenAuthenticator(token=get_access_token(config))  # Oauth2Authenticator is also available if you need oauth support
-        return [Customers(authenticator=auth, config=config), Employees(authenticator=auth, config=config), Salesorders(authenticator=auth, config=config)]
-import requests
+        accesstoken=get_access_token(config)
+        auth = TokenAuthenticator(token=accesstoken)  # Oauth2Authenticator is also available if you need oauth support
+        #Get the entities from metadata and generate the schemas
+        headers= {#'User-Agent': 'python-requests/2.32.3'
+          'Accept': 'application/json'
+          , 'Connection': 'Close'
+          , 'Content-Type': 'application/json'
+          , 'Cache-Control': 'no-cache'
+          , 'Authorization': f'Bearer {accesstoken}'}
+        swaggerresponse = requests.request(method="GET",url=f'{config["BASEURL"]}/entity/Default/23.200.001/swagger.json',headers=headers)
+        swaggerjson=swaggerresponse.json()
+        get_schemas = extract_get_schemas(swaggerjson)
+
+    # Output the extracted schemas as JSON files
+        # for entity_name, schema in get_schemas.items():
+        #     schema_filename = f'{entity_name}_schema.json'
+        #     with open(schema_filename, 'w') as schema_file:
+        #         json.dump(schema, schema_file, indent=2)
+        #     print(f'Saved schema for {entity_name} to {schema_filename}')
+        
+        return [Salesorders(authenticator=auth, config=config)]
+
+def resolve_refs(schema, definitions):
+    """
+    Recursively replace $ref in the schema with the actual definition from the definitions section.
+    """
+    if isinstance(schema, dict):
+        # Check if there's a $ref key in the current schema
+        if '$ref' in schema:
+            ref_name = schema['$ref'].split('/')[-1]
+            if ref_name in definitions:
+                # Replace the $ref with a deep copy of the referenced definition to avoid modification of the original
+                return resolve_refs(copy.deepcopy(definitions[ref_name]), definitions)
+        else:
+            # Recursively resolve $ref in properties and items
+            for key, value in schema.items():
+                schema[key] = resolve_refs(value, definitions)
+    elif isinstance(schema, list):
+        # Recursively resolve $ref in list items
+        schema = [resolve_refs(item, definitions) for item in schema]
+
+    return schema
+
+
+def extract_get_schemas(swagger_json):
+    # Load the Swagger file (YAML or JSON)
+    swagger_spec = swagger_json
+
+    paths = swagger_spec.get('paths', {})
+    definitions = swagger_spec.get('definitions', {})
+    get_schemas = {}
+
+    for path, methods in paths.items():
+        if 'get' in methods and len(path.split("/"))==2:
+            get_method = methods['get']
+            responses = get_method.get('responses', {})
+            if '200' in responses:
+                schema = responses['200'].get('schema', {})
+                if schema:
+                    # Resolve any $ref within the schema
+                    resolved_schema = resolve_refs(schema, definitions)
+                    entity_name = path.strip('/').replace('/', '_')
+                    get_schemas[entity_name] = resolved_schema
+
+    return get_schemas
+    
 
 
 
@@ -271,15 +414,3 @@ def make_api_request(token, endpoint):
     else:
         raise Exception(f"API request failed: {response.status_code}, {response.text}")
 
-if __name__ == '__main__':
-    try:
-        # Get access token
-        access_token = get_access_token()
-        
-        # Make API request using the obtained token
-        endpoint = 'Default/23.200.001/SalesOrder'
-        data = make_api_request(access_token, endpoint)
-        print("API response:", data)
-        
-    except Exception as e:
-        print("Error:", str(e))

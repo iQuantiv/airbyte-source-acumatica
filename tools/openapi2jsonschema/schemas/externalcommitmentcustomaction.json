@@ -1,0 +1,349 @@
+{
+  "required": [
+    "entity"
+  ],
+  "type": "object",
+  "properties": {
+    "entity": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "rowNumber": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "note": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "custom": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                  "required": [
+                    "type"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "discriminator": "type"
+                }
+              }
+            },
+            "error": {
+              "type": "string"
+            },
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "format": "uri",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "AccountGroup": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CommittedCOAmount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CommittedCOQty": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CommittedInvoicedAmount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CommittedInvoicedQty": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CommittedOpenAmount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CommittedOpenQty": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CommittedReceivedQty": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "CostCode": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ExternalRefNbr": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "InventoryID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "LastModifiedDateTime": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "OriginalCommittedAmount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "OriginalCommittedQty": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ProjectID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "ProjectTaskID": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "RelatedDocument": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "RevisedCommittedAmount": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "RevisedCommittedQty": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "Type": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "UOM": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "parameters": {
+      "description": "The parameters of the action.",
+      "type": "object",
+      "properties": {
+        "custom": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "required": [
+                "type"
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              },
+              "discriminator": "type"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/schema#"
+}

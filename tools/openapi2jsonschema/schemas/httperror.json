@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "exceptionMessage": {
+      "type": "string"
+    },
+    "exceptionType": {
+      "type": "string"
+    },
+    "stackTrace": {
+      "type": "string"
+    },
+    "modelState": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "messageDetail": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": {
+    "type": "object"
+  },
+  "$schema": "http://json-schema.org/schema#"
+}

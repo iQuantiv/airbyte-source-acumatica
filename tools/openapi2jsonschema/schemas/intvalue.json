@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "properties": {
+    "value": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "$schema": "http://json-schema.org/schema#"
+}
