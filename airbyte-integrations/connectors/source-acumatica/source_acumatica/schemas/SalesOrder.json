@@ -1,8 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "array",
-    "items": {
-      "type": "object",
+    "type": "object",
       "properties": {
         "id": {
           "type": "string",
@@ -376,6 +374,6 @@
         }
       },
       "required": ["id", "rowNumber", "note", "Approved", "BaseCurrencyID", "BillToAddressOverride", "BillToAddressValidated", "BillToContactOverride", "Branch", "ControlTotal", "CreatedDate", "CreditHold", "CurrencyID", "CurrencyRate", "CustomerID", "Date", "DisableAutomaticDiscountUpdate", "DisableAutomaticTaxCalculation", "EffectiveDate", "Hold", "LastModified", "LocationID", "NoteID", "OrderedQty", "OrderNbr", "OrderTotal", "OrderType", "Project", "ReciprocalRate", "RequestedOn", "ShipToAddressOverride", "ShipToAddressValidated", "ShipToContactOverride", "Status", "TaxTotal", "WillCall", "_links"]
-    }
+    
   }
   

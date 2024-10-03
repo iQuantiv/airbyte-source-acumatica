@@ -14,6 +14,9 @@ connectionSpecification:
     BASEURL:
       type: string
       description: base URL for Acumatica instance
+    TENANTNAME:
+      type: string
+      description: The tenant name for the Acumatica tenant (often entered after the Username below too)
     CLIENTID:
       type: string
       description: id used to distinguish client environment in Acumatica
