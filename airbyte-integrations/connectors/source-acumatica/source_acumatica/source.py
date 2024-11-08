@@ -397,6 +397,7 @@ def odata_xml_to_json_schema(xml_string):
     # For each EntitySet, generate the JSON schema
     schemas = {}
     for entity_set_name, entity_type_full_name in entity_sets.items():
+        #TODO: Combine all the entity types in the tree of types that are in the schema
         entity_type = entity_types.get(entity_type_full_name)
         if not entity_type:
             continue
@@ -406,41 +407,57 @@ def odata_xml_to_json_schema(xml_string):
             'schemaname':entity_set_name
         }
         # Build the JSON schema
-        schema = { 
-            'type': 'object',
-            'properties': {},
-            'required': [],
-        }
+        
 
+        schema,keys=fillSchemaFromEntityTypeTree(entity_types,entity_type,namespaces)
         # Find the Key properties
-        key_elements = entity_type.find('edm:Key',namespaces)
-        keys = []
-        if key_elements is not None:
-            for prop_ref in key_elements.findall('edm:PropertyRef',namespaces):
-                key_name = prop_ref.get('Name')
-                keys.append(key_name)
 
-        # Process Properties
-        for prop in entity_type.findall('edm:Property',namespaces):
-            prop_name = prop.get('Name')
-            prop_type = prop.get('Type')
-            json_type = map_edm_to_json_type(prop_type)
-            nullable = prop.get('Nullable', 'true').lower() == 'true'
-
-            schema['properties'][prop_name] = {
-                'type': json_type
-            }
-
-            # Add to required if it is a key or not nullable
-            if prop_name in keys or not nullable:
-                schema['required'].append(prop_name)
+        
         streamdata["primarykey"]=keys
         streamdata["schema"]=schema
         fullschemaname="DAC__" + entity_set_name
         schemas[fullschemaname] = streamdata
 
     return schemas
+def fillSchemaFromEntityTypeTree(entity_types,entity_type,namespaces) -> Tuple[dict[str,Any],list]:
+    schema = { 
+            'type': 'object',
+            'properties': dict(),
+            'required': [],
+        }
+    keys = []
+    if(entity_type.get("BaseType") is not None):
+        baseEntityType=entity_types.get(entity_type.get('BaseType'))
+        baseschema,basekeys=fillSchemaFromEntityTypeTree(entity_types,baseEntityType,namespaces)
+        if(baseschema is not None):
+            schema["properties"].update(baseschema["properties"])
+            schema["required"].extend(baseschema["required"])
+        if(basekeys is not None):
+            keys.extend(basekeys)
+    key_elements = entity_type.find('edm:Key',namespaces)
+    
+    if key_elements is not None:
+        for prop_ref in key_elements.findall('edm:PropertyRef',namespaces):
+            key_name = prop_ref.get('Name')
+            keys.append(key_name)
 
+    # Process Properties
+    for prop in entity_type.findall('edm:Property',namespaces):
+        prop_name = prop.get('Name')
+        prop_type = prop.get('Type')
+        json_type = map_edm_to_json_type(prop_type)
+        nullable = prop.get('Nullable', 'true').lower() == 'true'
+
+        schema['properties'][prop_name] = {
+            'type': json_type
+        }
+
+        # Add to required if it is a key or not nullable
+        if prop_name in keys or not nullable:
+            schema['required'].append(prop_name)
+
+    return schema,keys
+        
 def map_edm_to_json_type(edm_type):
     # Simple mapping from EDM types to JSON Schema types
     edm_to_json_type_map = {

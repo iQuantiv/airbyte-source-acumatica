@@ -19,7 +19,7 @@ data:
   connectorSubtype: api
   connectorType: source
   definitionId: f71f1a17-18d3-4c71-9778-eedac4b69456
-  dockerImageTag: 0.1.12
+  dockerImageTag: 0.1.13
   dockerRepository: airbyte/source-acumatica
   githubIssueLabel: source-acumatica
   icon: acumatica.svg
