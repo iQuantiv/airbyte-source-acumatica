@@ -80,7 +80,8 @@ class AcumaticaStream(Stream, ABC):
             logger=self.logger,
             authenticator=authenticator
         )
-        self._page_size=self.config.get("PAGESIZE",1000)
+        stream_overrides=self.config.get("STREAM_PAGESIZE_OVERRIDES",{})
+        self._page_size=stream_overrides.get(self.name, self.config.get("PAGESIZE",1000))
         self._streams_to_disable_paging=self.config.get("STREAMSTODISABLEPAGING",[])
         self._max_empty_retries=self.config.get("MAX_EMPTY_RETRIES",10)
         self._empty_retry_backoff_base=self.config.get("EMPTY_RETRY_BACKOFF_BASE",5)
