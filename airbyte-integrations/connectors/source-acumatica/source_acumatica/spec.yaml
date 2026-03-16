@@ -41,10 +41,10 @@ connectionSpecification:
       items:
         type: string
     STREAM_PAGESIZE_OVERRIDES:
-      type: object
-      description: Per-stream page size overrides. Keys are stream names (e.g. "DAC__GLTran"), values are the page size for that stream. Streams not listed here use the global PAGESIZE.
-      additionalProperties:
-        type: integer
+      type: array
+      description: "Per-stream page size overrides. Format: StreamName::PageSize (e.g. DAC__GLTran::10000). Streams not listed here use the global PAGESIZE."
+      items:
+        type: string
     MAX_EMPTY_RETRIES:
       type: integer
       description: Maximum number of consecutive empty 200 responses to retry before failing the sync. Prevents incomplete data pulls.

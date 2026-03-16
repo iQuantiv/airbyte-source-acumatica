@@ -80,7 +80,8 @@ class AcumaticaStream(Stream, ABC):
             logger=self.logger,
             authenticator=authenticator
         )
-        stream_overrides=self.config.get("STREAM_PAGESIZE_OVERRIDES",{})
+        overrides_list=self.config.get("STREAM_PAGESIZE_OVERRIDES",[])
+        stream_overrides={entry.split("::")[0]: int(entry.split("::")[1]) for entry in overrides_list if "::" in entry}
         self._page_size=stream_overrides.get(self.name, self.config.get("PAGESIZE",1000))
         self._streams_to_disable_paging=self.config.get("STREAMSTODISABLEPAGING",[])
         self._max_empty_retries=self.config.get("MAX_EMPTY_RETRIES",10)
