@@ -40,6 +40,19 @@ connectionSpecification:
       description: List of streams to disable paging for. If a stream is in this list, the connector will attempt to fetch all records from that stream in a single request. This is useful for streams that do not support paging or have a small number of records.
       items:
         type: string
+    STREAM_PAGESIZE_OVERRIDES:
+      type: object
+      description: Per-stream page size overrides. Keys are stream names (e.g. "DAC__GLTran"), values are the page size for that stream. Streams not listed here use the global PAGESIZE.
+      additionalProperties:
+        type: integer
+    MAX_EMPTY_RETRIES:
+      type: integer
+      description: Maximum number of consecutive empty 200 responses to retry before failing the sync. Prevents incomplete data pulls.
+      default: 10
+    EMPTY_RETRY_BACKOFF_BASE:
+      type: integer
+      description: Base for exponential backoff (in seconds) between retries of empty 200 responses. Wait time is base^retry, capped at 5 minutes.
+      default: 5
     APIVERSION:
       type: string
       description: API version to use when connecting to Acumatica. If not specified, the connector will use the default API version.
