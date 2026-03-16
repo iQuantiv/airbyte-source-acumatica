@@ -7,6 +7,7 @@ from abc import ABC
 import collections
 import copy
 import datetime
+import time
 from typing import Any, Iterable, List, Mapping, MutableMapping, Optional, Tuple, Union
 from urllib.parse import urljoin
 from dateutil.parser import parse
@@ -147,10 +148,12 @@ class AcumaticaStream(Stream, ABC):
         
         pagination_complete = False
         next_page_token=self._current_page
-        
+        max_empty_retries = 5
+        empty_retries = 0
+
         while not pagination_complete:
             try:
-                
+
                 requestparams=self.request_params(stream_state=stream_state,stream_slice=stream_slice,next_page_token=next_page_token)
                 logger.info(f"Sending request to {urlpath} with params: {requestparams}")
                 _,response = self._http_client.send_request(http_method="GET"
@@ -159,16 +162,35 @@ class AcumaticaStream(Stream, ABC):
                                                                 ,headers=self.request_headers(stream_state=stream_state,stream_slice=stream_slice)
                                                                 ,params=requestparams)
                 flattenedjsonvals=[]
-                if(response.status_code==200 and len(response.content)>0):
+                if response.status_code != 200:
+                    raise Exception(f"Error pulling Data:{response.status_code} - {response.content}")
+                if len(response.content) > 0:
                     responsejson=response.json()
                     if("@odata.context" in responsejson or "odata.metadata" in responsejson):
                         flattenedjsonvals=flatten_json_array(responsejson["value"])
                     else:
                         flattenedjsonvals=flatten_json_array(responsejson)
-                else:
-                    raise Exception(f"Error pulling Data:{response.status_code} - {response.content}")
+
+                if len(response.content) == 0:
+                    # Empty body on 200 — transient API failure, retry with backoff
+                    empty_retries += 1
+                    if empty_retries > max_empty_retries:
+                        raise Exception(
+                            f"Stream {self.name}: received {max_empty_retries} consecutive empty 200 responses "
+                            f"at page {self._current_page} (params: {requestparams}). "
+                            f"The API is not returning data. Failing sync to prevent incomplete data."
+                        )
+                    wait_seconds = 2 ** empty_retries
+                    logger.warning(
+                        f"Stream {self.name}: empty 200 response at page {self._current_page}, "
+                        f"retry {empty_retries}/{max_empty_retries} after {wait_seconds}s"
+                    )
+                    time.sleep(wait_seconds)
+                    continue
+
+                empty_retries = 0
                 yield from flattenedjsonvals
-                if (len(flattenedjsonvals)==0 or self.name in self._streams_to_disable_paging):
+                if (len(flattenedjsonvals) == 0 or self.name in self._streams_to_disable_paging):
                     pagination_complete = True
                 else:
                     self._current_page += 1
