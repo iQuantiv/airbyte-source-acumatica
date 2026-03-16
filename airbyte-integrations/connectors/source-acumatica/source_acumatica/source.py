@@ -82,6 +82,8 @@ class AcumaticaStream(Stream, ABC):
         )
         self._page_size=self.config.get("PAGESIZE",1000)
         self._streams_to_disable_paging=self.config.get("STREAMSTODISABLEPAGING",[])
+        self._max_empty_retries=self.config.get("MAX_EMPTY_RETRIES",10)
+        self._empty_retry_backoff_base=self.config.get("EMPTY_RETRY_BACKOFF_BASE",5)
         self._current_page=0
 
     @property
@@ -148,7 +150,6 @@ class AcumaticaStream(Stream, ABC):
         
         pagination_complete = False
         next_page_token=self._current_page
-        max_empty_retries = 5
         empty_retries = 0
 
         while not pagination_complete:
@@ -174,16 +175,16 @@ class AcumaticaStream(Stream, ABC):
                 if len(response.content) == 0:
                     # Empty body on 200 — transient API failure, retry with backoff
                     empty_retries += 1
-                    if empty_retries > max_empty_retries:
+                    if empty_retries > self._max_empty_retries:
                         raise Exception(
-                            f"Stream {self.name}: received {max_empty_retries} consecutive empty 200 responses "
+                            f"Stream {self.name}: received {self._max_empty_retries} consecutive empty 200 responses "
                             f"at page {self._current_page} (params: {requestparams}). "
                             f"The API is not returning data. Failing sync to prevent incomplete data."
                         )
-                    wait_seconds = 2 ** empty_retries
+                    wait_seconds = min(self._empty_retry_backoff_base ** empty_retries, 300)
                     logger.warning(
                         f"Stream {self.name}: empty 200 response at page {self._current_page}, "
-                        f"retry {empty_retries}/{max_empty_retries} after {wait_seconds}s"
+                        f"retry {empty_retries}/{self._max_empty_retries} after {wait_seconds}s"
                     )
                     time.sleep(wait_seconds)
                     continue
