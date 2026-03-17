@@ -7,6 +7,7 @@ from abc import ABC
 import collections
 import copy
 import datetime
+import time
 from typing import Any, Iterable, List, Mapping, MutableMapping, Optional, Tuple, Union
 from urllib.parse import urljoin
 from dateutil.parser import parse
@@ -24,6 +25,7 @@ from airbyte_cdk.sources.streams.core import StreamData
 from airbyte_cdk.sources.streams.http import HttpStream,HttpClient
 from airbyte_cdk.sources.streams.http.requests_native_auth import TokenAuthenticator
 from airbyte_cdk.sources.streams.http.requests_native_auth.oauth import Oauth2Authenticator
+from airbyte_cdk.utils.traced_exception import AirbyteTracedException
 
 import logging
 logger = logging.getLogger("airbyte")
@@ -79,8 +81,12 @@ class AcumaticaStream(Stream, ABC):
             logger=self.logger,
             authenticator=authenticator
         )
-        self._page_size=self.config.get("PAGESIZE",1000)
+        overrides_list=self.config.get("STREAM_PAGESIZE_OVERRIDES",[])
+        stream_overrides={entry.split("::")[0]: int(entry.split("::")[1]) for entry in overrides_list if "::" in entry}
+        self._page_size=stream_overrides.get(self.name, self.config.get("PAGESIZE",1000))
         self._streams_to_disable_paging=self.config.get("STREAMSTODISABLEPAGING",[])
+        self._max_empty_retries=self.config.get("MAX_EMPTY_RETRIES",10)
+        self._empty_retry_backoff_base=self.config.get("EMPTY_RETRY_BACKOFF_BASE",5)
         self._current_page=0
 
     @property
@@ -146,11 +152,13 @@ class AcumaticaStream(Stream, ABC):
             )
         
         pagination_complete = False
+        self._current_page = 0
         next_page_token=self._current_page
-        
+        empty_retries = 0
+
         while not pagination_complete:
             try:
-                
+
                 requestparams=self.request_params(stream_state=stream_state,stream_slice=stream_slice,next_page_token=next_page_token)
                 logger.info(f"Sending request to {urlpath} with params: {requestparams}")
                 _,response = self._http_client.send_request(http_method="GET"
@@ -159,20 +167,52 @@ class AcumaticaStream(Stream, ABC):
                                                                 ,headers=self.request_headers(stream_state=stream_state,stream_slice=stream_slice)
                                                                 ,params=requestparams)
                 flattenedjsonvals=[]
-                if(response.status_code==200 and len(response.content)>0):
+                if response.status_code != 200:
+                    raise Exception(f"Error pulling Data:{response.status_code} - {response.content}")
+                if len(response.content) > 0:
                     responsejson=response.json()
                     if("@odata.context" in responsejson or "odata.metadata" in responsejson):
                         flattenedjsonvals=flatten_json_array(responsejson["value"])
                     else:
                         flattenedjsonvals=flatten_json_array(responsejson)
-                else:
-                    raise Exception(f"Error pulling Data:{response.status_code} - {response.content}")
+
+                if len(response.content) == 0:
+                    # Empty body on 200 — transient API failure, retry with backoff
+                    empty_retries += 1
+                    if empty_retries > self._max_empty_retries:
+                        raise Exception(
+                            f"Stream {self.name}: received {self._max_empty_retries} consecutive empty 200 responses "
+                            f"at page {self._current_page} (params: {requestparams}). "
+                            f"The API is not returning data. Failing sync to prevent incomplete data."
+                        )
+                    wait_seconds = min(self._empty_retry_backoff_base ** empty_retries, 300)
+                    logger.warning(
+                        f"Stream {self.name}: empty 200 response at page {self._current_page}, "
+                        f"retry {empty_retries}/{self._max_empty_retries} after {wait_seconds}s"
+                    )
+                    time.sleep(wait_seconds)
+                    continue
+
+                empty_retries = 0
                 yield from flattenedjsonvals
-                if (len(flattenedjsonvals)==0 or self.name in self._streams_to_disable_paging):
+                if (len(flattenedjsonvals) == 0 or self.name in self._streams_to_disable_paging):
                     pagination_complete = True
                 else:
                     self._current_page += 1
                     next_page_token=self._current_page
+            except AirbyteTracedException as ex:
+                # CDK raises this for failed requests (e.g. empty response from API)
+                # If we're in a date slice, treat as empty slice and move on
+                if stream_slice and "start_date" in stream_slice:
+                    logger.warning(
+                        f"Stream {self.name}: request failed for slice "
+                        f"{stream_slice['start_date']} to {stream_slice['end_date']}: {ex}. "
+                        f"Treating as empty slice."
+                    )
+                    pagination_complete = True
+                else:
+                    logger.error(ex)
+                    raise ex
             except Exception as ex:
                 logger.error(ex)
                 raise ex
@@ -185,12 +225,64 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
     def __init__(self,name:str,endpointtype:str,config: Mapping[str, Any],schema: dict[str,Any],primary_key:Optional[Union[str, List[str], List[List[str]]]],cursor_field:str,authenticator = None):
         super().__init__(name=name,endpointtype=endpointtype,config=config,schema=schema,primary_key=primary_key,authenticator=authenticator)
         self._cursor_field=cursor_field
+        self._initial_load_start_date=config.get("INITIAL_LOAD_START_DATE")
+        self._slice_range_days=config.get("SLICE_RANGE_DAYS", 7)
 
     state_checkpoint_interval = 10
-    
+
     @property
     def cursor_field(self) -> str:
         return self._cursor_field
+
+    def stream_slices(self, sync_mode: SyncMode, cursor_field: List[str] = None, stream_state: Mapping[str, Any] = None) -> Iterable[Optional[Mapping[str, Any]]]:
+        # Determine start date: from state if available, otherwise from config
+        if stream_state and self.cursor_field in stream_state:
+            cursor_value = stream_state[self.cursor_field]
+            # cursor_value could be a datetime object or string
+            if isinstance(cursor_value, str):
+                start = parse(cursor_value).replace(tzinfo=None)
+            else:
+                start = cursor_value.replace(tzinfo=None) if hasattr(cursor_value, 'replace') else parse(str(cursor_value)).replace(tzinfo=None)
+        elif self._initial_load_start_date:
+            start = parse(self._initial_load_start_date).replace(tzinfo=None)
+        else:
+            # No state and no start date configured — single unsliced request (original behavior)
+            yield None
+            return
+
+        # Always slice incremental syncs into date ranges
+        end = datetime.datetime.utcnow()
+        slice_delta = datetime.timedelta(days=self._slice_range_days)
+
+        slice_start = start
+        while slice_start < end:
+            slice_end = min(slice_start + slice_delta, end)
+            logger.info(f"Stream {self.name}: generating slice {slice_start.isoformat()}Z to {slice_end.isoformat()}Z")
+            yield {"start_date": slice_start.isoformat() + "Z", "end_date": slice_end.isoformat() + "Z"}
+            slice_start = slice_end
+
+    def request_params(
+        self, stream_state: Mapping[str, Any], stream_slice: Mapping[str, any] = None, next_page_token: int = None
+    ) -> MutableMapping[str, Any]:
+        returnobj={}
+        filters=[]
+
+        # Slice-based filter (always used when slices are active)
+        if stream_slice and "start_date" in stream_slice:
+            if self._endpointtype in ["DAC","Inquiry"]:
+                filters.append(f"{self.cursor_field} ge {stream_slice['start_date']}")
+                filters.append(f"{self.cursor_field} lt {stream_slice['end_date']}")
+            else:
+                filters.append(f"{self.cursor_field} ge datetimeoffset'{stream_slice['start_date']}'")
+                filters.append(f"{self.cursor_field} lt datetimeoffset'{stream_slice['end_date']}'")
+
+        if filters:
+            returnobj["$filter"] = " and ".join(filters)
+
+        if (next_page_token or next_page_token>=0) and self.name not in self._streams_to_disable_paging:
+            returnobj["$top"]=self._page_size
+            returnobj["$skip"]=next_page_token*self._page_size
+        return returnobj
 
     def get_updated_state(self, current_stream_state: MutableMapping[str, Any], latest_record: Mapping[str, Any]) -> Mapping[str, Any]:
         #If the pull dies midway and the records are not in order by last modified than this may make it so we lose records on restart.

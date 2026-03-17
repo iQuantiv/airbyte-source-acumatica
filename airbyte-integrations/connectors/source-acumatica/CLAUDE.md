@@ -66,9 +66,12 @@ source-acumatica/
 │   ├── testsalesorder.py        # SalesOrder endpoint tests
 │   ├── configured_catalog.json  # Sample sync catalog
 │   └── acceptance.py            # Acceptance test fixtures
+├── Dockerfile                 # Multi-stage Docker build (reads base image from build arg)
+├── build.sh                   # Build script (reads metadata.yaml for base image/version)
+├── check-base-image.sh        # Checks Docker Hub for newer base images
 ├── pyproject.toml              # Project metadata and deps
 ├── poetry.lock                 # Locked dependency versions
-├── metadata.yaml               # Airbyte registry metadata
+├── metadata.yaml               # Airbyte registry metadata (single source of truth for base image + version)
 ├── acceptance-test-config.yml  # Acceptance test config
 └── README.md                   # User documentation
 ```
@@ -88,25 +91,29 @@ which handle pagination, state management, and schema flattening.
 ```
 
 **Authentication Flow:**
-1. OAuth 2.0 token request using CLIENTID/CLIENTSECRET + USERNAME/PASSWORD
-2. Token used in all subsequent API requests via `TokenAuthenticator`
+1. `AcumaticaOauth2Authenticator` handles OAuth 2.0 ROPC flow (CLIENTID/CLIENTSECRET + USERNAME/PASSWORD)
+2. Token automatically refreshed on expiration via CDK's `Oauth2Authenticator` base class
 3. Session cleanup via `logoutFromAcumatica()` after each read operation
 
 **Data Flow:**
 1. `check_connection()` validates credentials by requesting an access token
 2. `streams()` introspects Acumatica metadata to build stream list dynamically
-3. Each stream fetches pages of data with `$skip/$top` pagination
-4. Incremental streams use cursor field (LastModified/LastModifiedDateTime) for state
-5. Nested objects are flattened to top-level properties via `flatten_json_array()`
+3. Incremental streams generate date-range slices via `stream_slices()`:
+   - Initial sync: slices from `INITIAL_LOAD_START_DATE` to now
+   - Subsequent syncs: slices from last saved cursor state to now
+   - Each slice uses `$filter` with `ge`/`lt` date boundaries
+4. Each slice fetches pages of data with `$skip/$top` pagination (offsets stay small)
+5. State is checkpointed after each slice and every 10 records for restartability
+6. Nested objects are flattened to top-level properties via `flatten_json_array()`
 
 ### Key Modules
 
 | Module | Location | Purpose |
 |--------|----------|---------|
-| SourceAcumatica | source.py:177 | Main source class; instantiates streams |
-| AcumaticaStream | source.py:31 | Base stream for full-refresh syncs; handles pagination and HTTP |
-| IncrementalAcumaticaStream | source.py:151 | Extends AcumaticaStream with cursor-based incremental state |
-| Authentication | source.py | `get_access_token()`: OAuth token retrieval and refresh |
+| SourceAcumatica | source.py | Main source class; instantiates streams |
+| AcumaticaStream | source.py | Base stream for full-refresh syncs; handles pagination, retry, and HTTP |
+| IncrementalAcumaticaStream | source.py | Extends AcumaticaStream with cursor-based incremental state |
+| AcumaticaOauth2Authenticator | source.py | OAuth 2.0 ROPC authenticator with auto token refresh |
 | Metadata Resolution | source.py | `getmetatdata()`, `getodata3metadata()`, `getodata4metadata()`: Schema introspection |
 | Schema Processing | source.py:224 | `process_schema()`: Flattens allOf references and nested arrays |
 | Flattening | source.py | `flatten_json_array()`: Recursively flattens nested objects |
@@ -167,15 +174,19 @@ Current code does not strictly follow this, but new code should.
 - Schemas loaded from Acumatica's OData metadata rather than pre-defined
 - Supports new Acumatica fields without code changes
 
-**2. Incremental State Management:**
+**2. Incremental State Management with Date Slicing:**
+- `stream_slices()` generates date-range slices (configurable via `SLICE_RANGE_DAYS`, default 7)
+- Initial sync: slices from `INITIAL_LOAD_START_DATE` config to now
+- Subsequent syncs: slices from last saved cursor value to now
 - `get_updated_state()` compares cursor values (dates) to track progress
-- State persisted between syncs to resume from last position
-- Supports multiple cursor fields per entity
+- State checkpointed after each slice and every 10 records for restartability
+- Empty slices (API returns `AirbyteTracedException`) are skipped gracefully
 
 **3. Pagination Strategy:**
-- `request_params()` builds `$skip` and `$top` query parameters
-- `next_page_token` incremented after each page fetch
-- Loop terminates when response contains fewer records than page size
+- `request_params()` builds `$skip` and `$top` query parameters within each slice
+- `next_page_token` incremented after each page fetch, resets per slice
+- Loop terminates when response contains zero records
+- Empty 200 responses retried with exponential backoff (configurable via `MAX_EMPTY_RETRIES` and `EMPTY_RETRY_BACKOFF_BASE`)
 
 **4. Schema Flattening:**
 - OData `$expand` and nested navigation properties flattened to flat JSON
@@ -193,8 +204,9 @@ Current code does not strictly follow this, but new code should.
 | `poetry run source-acumatica read --config --catalog` | Execute a sync with specified streams/columns |
 | `poetry run pytest unit_tests/` | Run unit tests (mocked) |
 | `poetry run pytest integration_tests/` | Run integration tests (live API) |
-| `airbyte-ci connectors --name=source-acumatica build` | Build Docker image for connector |
-| `airbyte-ci connectors --name=source-acumatica test` | Run full CI test suite (build + unit + integration) |
+| `./build.sh` | Build Docker image (reads base image and version from metadata.yaml) |
+| `./build.sh 0.1.28` | Build with version override |
+| `./check-base-image.sh` | Check Docker Hub for newer base images |
 
 ## Environment & Configuration
 
@@ -209,6 +221,13 @@ Current code does not strictly follow this, but new code should.
 | `PASSWORD` | string | Yes | Acumatica password (secret) | `0kX&jkex7Agn%xMW` |
 | `TENANTNAME` | string | No | Tenant name (if multi-tenant) | `mycompany` |
 | `PAGESIZE` | number | No | Records per page (default: 1000) | `500` |
+| `STREAM_PAGESIZE_OVERRIDES` | array | No | Per-stream page size overrides. Format: `StreamName::PageSize` | `["DAC__GLTran::10000"]` |
+| `STREAMSTODISABLEPAGING` | array | No | Streams to disable paging for (fetches all records in one request) | `["Inquiry__MyStream"]` |
+| `MAX_EMPTY_RETRIES` | integer | No | Max retries for empty 200 responses (default: 10) | `10` |
+| `EMPTY_RETRY_BACKOFF_BASE` | integer | No | Backoff base in seconds for empty response retries (default: 5, capped at 300s) | `5` |
+| `INITIAL_LOAD_START_DATE` | date | No | Start date for incremental sync slicing. On subsequent syncs, slicing starts from the last saved state. | `"2020-01-01"` |
+| `SLICE_RANGE_DAYS` | integer | No | Days per slice for incremental loads (default: 7) | `7` |
+| `APIVERSION` | string | No | Acumatica API version (default: 24.200.001) | `"24.200.001"` |
 
 ### Required Environment Variables
 
@@ -224,7 +243,12 @@ Create `secrets/config.json`:
   "CLIENTSECRET": "your-client-secret",
   "USERNAME": "your-username",
   "PASSWORD": "your-password",
-  "PAGESIZE": 1000
+  "PAGESIZE": 1000,
+  "STREAM_PAGESIZE_OVERRIDES": ["DAC__GLTran::10000"],
+  "INITIAL_LOAD_START_DATE": "2020-01-01",
+  "SLICE_RANGE_DAYS": 7,
+  "MAX_EMPTY_RETRIES": 10,
+  "EMPTY_RETRY_BACKOFF_BASE": 5
 }
 ```
 
@@ -277,10 +301,12 @@ This file is gitignored for security.
 
 ## Recent Changes
 
-- **Latest:** Added paging support for large result sets ($skip/$top)
-- **Recent:** Inquiry endpoints (OData v3) and DAC endpoints (OData v4) support
-- **Recent:** Schema conversion fixes for allOf and nested parent properties
-- **Recent:** Incremental sync fixes and cursor field handling improvements
+- **Latest:** Per-stream page size overrides, configurable empty response retry with capped backoff
+- **Recent:** Dockerfile and build.sh replacing airbyte-ci, base image update checker
+- **Recent:** AcumaticaOauth2Authenticator replacing manual get_access_token()
+- **Recent:** Added paging support for large result sets ($skip/$top)
+- **Earlier:** Inquiry endpoints (OData v3) and DAC endpoints (OData v4) support
+- **Earlier:** Schema conversion fixes for allOf and nested parent properties
 
 See git log for full commit history.
 
@@ -294,8 +320,8 @@ poetry run source-acumatica check --config secrets/config.json
 
 ### Docker Image
 ```bash
-# Build image
-airbyte-ci connectors --name=source-acumatica build
+# Build image (reads base image and version from metadata.yaml)
+./build.sh
 
 # Run in Docker
 docker run --rm \
@@ -305,9 +331,15 @@ docker run --rm \
   read --config /secrets/config.json --catalog /sample_files/configured_catalog.json
 ```
 
-### Airbyte Cloud
-- Connector automatically published to Docker Hub and Airbyte registry after merge
-- Current version: 0.1.19 (see metadata.yaml)
+### Push to Azure Container Registry
+```bash
+docker tag airbyte/source-acumatica:<version> acriquantiv.azurecr.io/source-acumatica:<version>
+az acr login --name acriquantiv
+docker push acriquantiv.azurecr.io/source-acumatica:<version>
+```
+
+### Release stage
+- Current version: see `dockerImageTag` in metadata.yaml
 - Release stage: Beta (community-supported)
 
 ## Additional Resources

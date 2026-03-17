@@ -47,31 +47,41 @@ poetry run pytest tests
 
 ### Building the docker image
 
-1. Install [`airbyte-ci`](https://github.com/airbytehq/airbyte/blob/master/airbyte-ci/connectors/pipelines/README.md)
-2. Run the following command to build the docker image:
+From this connector directory, run:
 ```bash
-airbyte-ci connectors --name=source-acumatica build
+./build.sh
 ```
 
-An image will be available on your host with the tag `airbyte/source-acumatica:dev`.
+This reads the base image, version, and repository from `metadata.yaml` and builds a multi-stage Docker image. Two tags are created:
+- `airbyte/source-acumatica:<version>` (e.g., `airbyte/source-acumatica:0.1.23`)
+- `airbyte/source-acumatica:dev`
 
+You can override the version tag: `./build.sh 0.1.24`
 
 ### Running as a docker container
 
-Then run any of the connector commands as follows:
-```
+```bash
 docker run --rm airbyte/source-acumatica:dev spec
 docker run --rm -v $(pwd)/secrets:/secrets airbyte/source-acumatica:dev check --config /secrets/config.json
 docker run --rm -v $(pwd)/secrets:/secrets airbyte/source-acumatica:dev discover --config /secrets/config.json
 docker run --rm -v $(pwd)/secrets:/secrets -v $(pwd)/integration_tests:/integration_tests airbyte/source-acumatica:dev read --config /secrets/config.json --catalog /integration_tests/configured_catalog.json
 ```
 
-### Running our CI test suite
-
-You can run our full test suite locally using [`airbyte-ci`](https://github.com/airbytehq/airbyte/blob/master/airbyte-ci/connectors/pipelines/README.md):
+### Pushing to a container registry
 
 ```bash
-airbyte-ci connectors --name=source-acumatica test
+# Tag for your registry
+docker tag airbyte/source-acumatica:0.1.23 <your-registry>/airbyte/source-acumatica:0.1.23
+
+# Push
+docker push <your-registry>/airbyte/source-acumatica:0.1.23
+```
+
+### Checking for base image updates
+
+A pre-commit hook automatically checks for newer versions of the base image when committing connector changes. You can also run the check manually:
+```bash
+./check-base-image.sh
 ```
 
 ### Customizing acceptance Tests
@@ -92,14 +102,8 @@ Please commit the changes to `pyproject.toml` and `poetry.lock` files.
 
 ## Publishing a new version of the connector
 
-You've checked out the repo, implemented a million dollar feature, and you're ready to share your changes with the world. Now what?
-1. Make sure your changes are passing our test suite: `airbyte-ci connectors --name=source-acumatica test`
-2. Bump the connector version (please follow [semantic versioning for connectors](https://docs.airbyte.com/contributing-to-airbyte/resources/pull-requests-handbook/#semantic-versioning-for-connectors)): 
-    - bump the `dockerImageTag` value in in `metadata.yaml`
-    - bump the `version` value in `pyproject.toml`
-3. Make sure the `metadata.yaml` content is up to date.
-4. Make sure the connector documentation and its changelog is up to date (`docs/integrations/sources/acumatica.md`).
-5. Create a Pull Request: use [our PR naming conventions](https://docs.airbyte.com/contributing-to-airbyte/resources/pull-requests-handbook/#pull-request-title-convention).
-6. Pat yourself on the back for being an awesome contributor.
-7. Someone from Airbyte will take a look at your PR and iterate with you to merge it into master.
-8. Once your PR is merged, the new version of the connector will be automatically published to Docker Hub and our connector registry.
+1. Run tests: `poetry run pytest unit_tests/`
+2. Bump the `dockerImageTag` in `metadata.yaml`
+3. Build the image: `./build.sh`
+4. Test in Docker: `docker run --rm -v $(pwd)/secrets:/secrets airbyte/source-acumatica:dev check --config /secrets/config.json`
+5. Tag and push to your container registry
