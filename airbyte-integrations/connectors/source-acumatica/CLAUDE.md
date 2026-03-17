@@ -98,9 +98,13 @@ which handle pagination, state management, and schema flattening.
 **Data Flow:**
 1. `check_connection()` validates credentials by requesting an access token
 2. `streams()` introspects Acumatica metadata to build stream list dynamically
-3. Each stream fetches pages of data with `$skip/$top` pagination
-4. Incremental streams use cursor field (LastModified/LastModifiedDateTime) for state
-5. Nested objects are flattened to top-level properties via `flatten_json_array()`
+3. Incremental streams generate date-range slices via `stream_slices()`:
+   - Initial sync: slices from `INITIAL_LOAD_START_DATE` to now
+   - Subsequent syncs: slices from last saved cursor state to now
+   - Each slice uses `$filter` with `ge`/`lt` date boundaries
+4. Each slice fetches pages of data with `$skip/$top` pagination (offsets stay small)
+5. State is checkpointed after each slice and every 10 records for restartability
+6. Nested objects are flattened to top-level properties via `flatten_json_array()`
 
 ### Key Modules
 
@@ -170,15 +174,19 @@ Current code does not strictly follow this, but new code should.
 - Schemas loaded from Acumatica's OData metadata rather than pre-defined
 - Supports new Acumatica fields without code changes
 
-**2. Incremental State Management:**
+**2. Incremental State Management with Date Slicing:**
+- `stream_slices()` generates date-range slices (configurable via `SLICE_RANGE_DAYS`, default 7)
+- Initial sync: slices from `INITIAL_LOAD_START_DATE` config to now
+- Subsequent syncs: slices from last saved cursor value to now
 - `get_updated_state()` compares cursor values (dates) to track progress
-- State persisted between syncs to resume from last position
-- Supports multiple cursor fields per entity
+- State checkpointed after each slice and every 10 records for restartability
+- Empty slices (API returns `AirbyteTracedException`) are skipped gracefully
 
 **3. Pagination Strategy:**
-- `request_params()` builds `$skip` and `$top` query parameters
-- `next_page_token` incremented after each page fetch
-- Loop terminates when response contains fewer records than page size
+- `request_params()` builds `$skip` and `$top` query parameters within each slice
+- `next_page_token` incremented after each page fetch, resets per slice
+- Loop terminates when response contains zero records
+- Empty 200 responses retried with exponential backoff (configurable via `MAX_EMPTY_RETRIES` and `EMPTY_RETRY_BACKOFF_BASE`)
 
 **4. Schema Flattening:**
 - OData `$expand` and nested navigation properties flattened to flat JSON
@@ -217,6 +225,8 @@ Current code does not strictly follow this, but new code should.
 | `STREAMSTODISABLEPAGING` | array | No | Streams to disable paging for (fetches all records in one request) | `["Inquiry__MyStream"]` |
 | `MAX_EMPTY_RETRIES` | integer | No | Max retries for empty 200 responses (default: 10) | `10` |
 | `EMPTY_RETRY_BACKOFF_BASE` | integer | No | Backoff base in seconds for empty response retries (default: 5, capped at 300s) | `5` |
+| `INITIAL_LOAD_START_DATE` | date | No | Start date for incremental sync slicing. On subsequent syncs, slicing starts from the last saved state. | `"2020-01-01"` |
+| `SLICE_RANGE_DAYS` | integer | No | Days per slice for incremental loads (default: 7) | `7` |
 | `APIVERSION` | string | No | Acumatica API version (default: 24.200.001) | `"24.200.001"` |
 
 ### Required Environment Variables
@@ -235,6 +245,8 @@ Create `secrets/config.json`:
   "PASSWORD": "your-password",
   "PAGESIZE": 1000,
   "STREAM_PAGESIZE_OVERRIDES": ["DAC__GLTran::10000"],
+  "INITIAL_LOAD_START_DATE": "2020-01-01",
+  "SLICE_RANGE_DAYS": 7,
   "MAX_EMPTY_RETRIES": 10,
   "EMPTY_RETRY_BACKOFF_BASE": 5
 }
