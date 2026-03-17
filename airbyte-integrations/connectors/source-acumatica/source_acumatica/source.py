@@ -25,6 +25,7 @@ from airbyte_cdk.sources.streams.core import StreamData
 from airbyte_cdk.sources.streams.http import HttpStream,HttpClient
 from airbyte_cdk.sources.streams.http.requests_native_auth import TokenAuthenticator
 from airbyte_cdk.sources.streams.http.requests_native_auth.oauth import Oauth2Authenticator
+from airbyte_cdk.utils.traced_exception import AirbyteTracedException
 
 import logging
 logger = logging.getLogger("airbyte")
@@ -199,6 +200,19 @@ class AcumaticaStream(Stream, ABC):
                 else:
                     self._current_page += 1
                     next_page_token=self._current_page
+            except AirbyteTracedException as ex:
+                # CDK raises this for failed requests (e.g. empty response from API)
+                # If we're in a date slice, treat as empty slice and move on
+                if stream_slice and "start_date" in stream_slice:
+                    logger.warning(
+                        f"Stream {self.name}: request failed for slice "
+                        f"{stream_slice['start_date']} to {stream_slice['end_date']}: {ex}. "
+                        f"Treating as empty slice."
+                    )
+                    pagination_complete = True
+                else:
+                    logger.error(ex)
+                    raise ex
             except Exception as ex:
                 logger.error(ex)
                 raise ex
@@ -221,26 +235,30 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
         return self._cursor_field
 
     def stream_slices(self, sync_mode: SyncMode, cursor_field: List[str] = None, stream_state: Mapping[str, Any] = None) -> Iterable[Optional[Mapping[str, Any]]]:
+        # Determine start date: from state if available, otherwise from config
         if stream_state and self.cursor_field in stream_state:
-            # Subsequent sync — no slicing needed, request_params uses stream_state filter
+            cursor_value = stream_state[self.cursor_field]
+            # cursor_value could be a datetime object or string
+            if isinstance(cursor_value, str):
+                start = parse(cursor_value).replace(tzinfo=None)
+            else:
+                start = cursor_value.replace(tzinfo=None) if hasattr(cursor_value, 'replace') else parse(str(cursor_value)).replace(tzinfo=None)
+        elif self._initial_load_start_date:
+            start = parse(self._initial_load_start_date).replace(tzinfo=None)
+        else:
+            # No state and no start date configured — single unsliced request (original behavior)
             yield None
             return
 
-        if not self._initial_load_start_date:
-            # No start date configured — single unsliced request (original behavior)
-            yield None
-            return
-
-        # Initial load — generate date range slices
-        start = parse(self._initial_load_start_date).replace(tzinfo=None)
+        # Always slice incremental syncs into date ranges
         end = datetime.datetime.utcnow()
         slice_delta = datetime.timedelta(days=self._slice_range_days)
 
         slice_start = start
         while slice_start < end:
             slice_end = min(slice_start + slice_delta, end)
-            logger.info(f"Stream {self.name}: generating slice {slice_start.isoformat()} to {slice_end.isoformat()}")
-            yield {"start_date": slice_start.isoformat(), "end_date": slice_end.isoformat()}
+            logger.info(f"Stream {self.name}: generating slice {slice_start.isoformat()}Z to {slice_end.isoformat()}Z")
+            yield {"start_date": slice_start.isoformat() + "Z", "end_date": slice_end.isoformat() + "Z"}
             slice_start = slice_end
 
     def request_params(
@@ -249,7 +267,7 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
         returnobj={}
         filters=[]
 
-        # Slice-based filter (initial load with date slices)
+        # Slice-based filter (always used when slices are active)
         if stream_slice and "start_date" in stream_slice:
             if self._endpointtype in ["DAC","Inquiry"]:
                 filters.append(f"{self.cursor_field} ge {stream_slice['start_date']}")
@@ -257,12 +275,6 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
             else:
                 filters.append(f"{self.cursor_field} ge datetimeoffset'{stream_slice['start_date']}'")
                 filters.append(f"{self.cursor_field} lt datetimeoffset'{stream_slice['end_date']}'")
-        # State-based filter (subsequent incremental syncs)
-        elif stream_state and self.cursor_field in stream_state:
-            if self._endpointtype in ["DAC","Inquiry"]:
-                filters.append(f"{self.cursor_field} gt {stream_state.get(self.cursor_field)}")
-            else:
-                filters.append(f"{self.cursor_field} gt datetimeoffset'{stream_state.get(self.cursor_field)}'")
 
         if filters:
             returnobj["$filter"] = " and ".join(filters)
