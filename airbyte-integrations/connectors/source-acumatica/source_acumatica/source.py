@@ -151,6 +151,7 @@ class AcumaticaStream(Stream, ABC):
             )
         
         pagination_complete = False
+        self._current_page = 0
         next_page_token=self._current_page
         empty_retries = 0
 
@@ -210,12 +211,66 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
     def __init__(self,name:str,endpointtype:str,config: Mapping[str, Any],schema: dict[str,Any],primary_key:Optional[Union[str, List[str], List[List[str]]]],cursor_field:str,authenticator = None):
         super().__init__(name=name,endpointtype=endpointtype,config=config,schema=schema,primary_key=primary_key,authenticator=authenticator)
         self._cursor_field=cursor_field
+        self._initial_load_start_date=config.get("INITIAL_LOAD_START_DATE")
+        self._slice_range_days=config.get("SLICE_RANGE_DAYS", 7)
 
     state_checkpoint_interval = 10
-    
+
     @property
     def cursor_field(self) -> str:
         return self._cursor_field
+
+    def stream_slices(self, sync_mode: SyncMode, cursor_field: List[str] = None, stream_state: Mapping[str, Any] = None) -> Iterable[Optional[Mapping[str, Any]]]:
+        if stream_state and self.cursor_field in stream_state:
+            # Subsequent sync — no slicing needed, request_params uses stream_state filter
+            yield None
+            return
+
+        if not self._initial_load_start_date:
+            # No start date configured — single unsliced request (original behavior)
+            yield None
+            return
+
+        # Initial load — generate date range slices
+        start = parse(self._initial_load_start_date).replace(tzinfo=None)
+        end = datetime.datetime.utcnow()
+        slice_delta = datetime.timedelta(days=self._slice_range_days)
+
+        slice_start = start
+        while slice_start < end:
+            slice_end = min(slice_start + slice_delta, end)
+            logger.info(f"Stream {self.name}: generating slice {slice_start.isoformat()} to {slice_end.isoformat()}")
+            yield {"start_date": slice_start.isoformat(), "end_date": slice_end.isoformat()}
+            slice_start = slice_end
+
+    def request_params(
+        self, stream_state: Mapping[str, Any], stream_slice: Mapping[str, any] = None, next_page_token: int = None
+    ) -> MutableMapping[str, Any]:
+        returnobj={}
+        filters=[]
+
+        # Slice-based filter (initial load with date slices)
+        if stream_slice and "start_date" in stream_slice:
+            if self._endpointtype in ["DAC","Inquiry"]:
+                filters.append(f"{self.cursor_field} ge {stream_slice['start_date']}")
+                filters.append(f"{self.cursor_field} lt {stream_slice['end_date']}")
+            else:
+                filters.append(f"{self.cursor_field} ge datetimeoffset'{stream_slice['start_date']}'")
+                filters.append(f"{self.cursor_field} lt datetimeoffset'{stream_slice['end_date']}'")
+        # State-based filter (subsequent incremental syncs)
+        elif stream_state and self.cursor_field in stream_state:
+            if self._endpointtype in ["DAC","Inquiry"]:
+                filters.append(f"{self.cursor_field} gt {stream_state.get(self.cursor_field)}")
+            else:
+                filters.append(f"{self.cursor_field} gt datetimeoffset'{stream_state.get(self.cursor_field)}'")
+
+        if filters:
+            returnobj["$filter"] = " and ".join(filters)
+
+        if (next_page_token or next_page_token>=0) and self.name not in self._streams_to_disable_paging:
+            returnobj["$top"]=self._page_size
+            returnobj["$skip"]=next_page_token*self._page_size
+        return returnobj
 
     def get_updated_state(self, current_stream_state: MutableMapping[str, Any], latest_record: Mapping[str, Any]) -> Mapping[str, Any]:
         #If the pull dies midway and the records are not in order by last modified than this may make it so we lose records on restart.
