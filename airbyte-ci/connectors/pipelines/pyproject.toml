@@ -19,7 +19,7 @@ docker = "^7"
 semver = "^3"
 airbyte-protocol-models = "*"
 jinja2 = "^3.0.2"
-requests = "^2.31"
+requests = "^2.33"
 airbyte-connectors-base-images = { path = "../base_images", develop = true }
 connector-ops = { path = "../connector_ops", develop = true }
 toml = "^0.10.2"
