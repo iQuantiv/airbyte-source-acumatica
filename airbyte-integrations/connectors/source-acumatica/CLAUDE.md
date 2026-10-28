@@ -6,8 +6,8 @@ An Airbyte source connector that integrates with Acumatica ERP systems. Extracts
 
 | Layer | Technology | Version | Purpose |
 |-------|------------|---------|---------|
-| Runtime | Python | 3.9–3.11 | Source connector implementation |
-| Framework | Airbyte CDK | 0.x | Connector development kit and stream abstractions |
+| Runtime | Python | 3.11–3.13 (image: 3.13) | Source connector implementation |
+| Framework | Airbyte CDK | 7.x | Connector development kit and stream abstractions |
 | Package Manager | Poetry | 1.7+ | Dependency management and packaging |
 | Testing | pytest + requests-mock | Latest | Unit and integration test framework |
 | Authentication | OAuth 2.0 | Standard | Token-based auth to Acumatica |
@@ -16,7 +16,7 @@ An Airbyte source connector that integrates with Acumatica ERP systems. Extracts
 
 ```bash
 # Prerequisites
-- Python 3.9 or 3.11
+- Python 3.11 to 3.13
 - Poetry 1.7+
 - Valid Acumatica instance with OAuth credentials
 

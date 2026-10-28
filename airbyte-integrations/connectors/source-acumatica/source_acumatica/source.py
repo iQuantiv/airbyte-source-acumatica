@@ -291,10 +291,11 @@ class IncrementalAcumaticaStream(AcumaticaStream, ABC):
         #TODO: Handle other cursor values than dates
         if(latest_cursor_value>current_cursor_value):
             new_stream_state=dict(current_stream_state)
-            new_stream_state[self.cursor_field]=latest_cursor_value
+            # Store an ISO string: CDK 7 keeps state in memory as-is, so a datetime would reach parse() on the next record
+            new_stream_state[self.cursor_field]=latest_cursor_value.isoformat()
             return new_stream_state
         elif(current_stream_state=={}):
-            return {self.cursor_field:latest_cursor_value}
+            return {self.cursor_field:latest_cursor_value.isoformat()}
         else:
             return current_stream_state
     
