@@ -1,0 +1,189 @@
+# Grouped Dependabot security fixes, version updates off (AB#9787).
+#
+# One block per ecosystem and directory that has open Dependabot alerts or security PRs, in the same
+# shape as the security blocks of dbt-mapping-veristat PR #162: no target-branch (a block with a
+# target-branch no longer applies to security updates, which always target the default branch),
+# open-pull-requests-limit: 0 so no version-update PRs are opened, and one group "security" that
+# applies to security updates, so a week's security fixes for a directory arrive as one PR.
+# Nothing here merges on its own.
+#
+# This repository is a copy of the Airbyte monorepo, with open alerts and security PRs in more than 50
+# directories. Only the 15 directories (plus source-acumatica, this repository's own connector) with the most open alerts plus open Dependabot PRs have a
+# block here (ranked on 2026-11-20); security PRs for the other directories still arrive, ungrouped.
+version: 2
+updates:
+  # 255 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-cdk/python"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 191 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/destination-qdrant"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 190 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/destination-snowflake-cortex"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 179 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/destination-chroma"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 179 open alerts + Dependabot PRs
+  - package-ecosystem: npm
+    directory: "/docusaurus"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 170 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/destination-weaviate"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 168 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/destination-pinecone"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 165 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-ci/connectors/live-tests"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 153 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/destination-milvus"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 144 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/destination-astra"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 126 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-ci/connectors/erd"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 115 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/source-amplitude"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 101 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-ci/connectors/connectors_qa"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 100 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-ci/connectors/pipelines"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 97 open alerts + Dependabot PRs
+  - package-ecosystem: pip
+    directory: "/airbyte-ci/connectors/connectors_insights"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  # 53 open alerts; this repository's own connector, added beyond the top 15
+  - package-ecosystem: pip
+    directory: "/airbyte-integrations/connectors/source-acumatica"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
